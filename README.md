@@ -169,4 +169,4 @@ Built as a college computer science project demonstrating:
 
 ## License
 
-MIT License — for academic and educational use
+MIT License — for academic and educational use.
