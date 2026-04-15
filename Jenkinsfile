@@ -167,5 +167,9 @@ pipeline {
             archiveArtifacts artifacts: 'reports/*.xml', allowEmptyArchive: true
         }
     }
-
+    stage('Deploy to Render') {
+    steps {
+        sh 'curl -X POST https://api.render.com/deploy/https://api.render.com/deploy/srv-d7fscmpf9bms73do5oc0?key=tGH9X4YX2tQ'
+    }
+}
 }   // ← closes pipeline { }
