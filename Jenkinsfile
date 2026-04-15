@@ -12,10 +12,7 @@
 
 pipeline {
 
-    agent {
-    docker {
-        image 'python:3.10'
-    }
+    agent any
 }
 
     // ── Environment Variables ──────────────────────────────────
@@ -51,7 +48,7 @@ pipeline {
                 sh '''
                     # Create virtual environment if it doesn't exist
                     if [ ! -d "${VENV_DIR}" ]; then
-                        python -m venv ${VENV_DIR}
+                        python3 -m venv ${VENV_DIR}
                     fi
 
                     # Activate venv and install requirements
@@ -264,7 +261,10 @@ pipeline {
         always {
             echo 'Pipeline execution complete.'
             // Archive test reports as Jenkins artifacts
-            archiveArtifacts artifacts: 'reports/*.xml', allowEmptyArchive: true
+            node{
+                archiveArtifacts artifacts: 'reports/*.xml', allowEmptyArchive: true
+            }
+            
         }
     }
 }
