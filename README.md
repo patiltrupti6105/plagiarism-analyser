@@ -162,7 +162,7 @@ This prevents both false inflation (a single matching paragraph) and underreport
 Built as a college computer science project demonstrating:
 - Full-stack web development (Python/Flask)
 - Natural Language Processing (TF-IDF, N-gram shingling)
-- Professional PDF generation
+- Professional PDF generation.
 - Modern web UI without external frameworks
 
 ---
