@@ -142,10 +142,9 @@ pipeline {
             }
         }
         stage('Deploy to Render') {
-    steps {
-        bat 'curl -X POST https://api.render.com/deploy/YOUR_DEPLOY_HOOK_URL'
-    }
-}
+            steps {
+             bat 'curl -X POST https://api.render.com/deploy/https://api.render.com/deploy/srv-d7fscmpf9bms73do5oc0?key=tGH9X4YX2tQ'
+        }
 }
 
     }   // ← closes stages { }
