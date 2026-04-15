@@ -118,7 +118,7 @@ pipeline {
                 failure { echo 'Selenium tests FAILED' }
             }
         }
-        /*
+        
         // ───────────────────────────────────────────────────────
         // STAGE 4: Docker Build & Run
         // ───────────────────────────────────────────────────────
@@ -141,7 +141,7 @@ pipeline {
                 }
             }
         }
-        */
+        
 
     }   // ← closes stages { }
 
