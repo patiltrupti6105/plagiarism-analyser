@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PlagiaGuard — Academic Integrity Analyser</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════ NOISE OVERLAY ═══════════════════════════════ -->
+  <div class="noise-overlay"></div>
+
+  <!-- ═══════════════════════════════ HEADER ═══════════════════════════════ -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">Plagia<em>Guard</em></span>
+      </div>
+      <nav class="header-nav">
+        <span class="nav-pill">Academic Tool</span>
+        <span class="nav-pill active">v2.1</span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-bg-lines"></div>
+    <div class="container">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Multi-Algorithm Detection Engine
+      </div>
+      <h1 class="hero-title">
+        Detect Plagiarism<br/>
+        <em class="hero-em">Before It Detects You</em>
+      </h1>
+      <p class="hero-sub">
+        Upload your document and reference sources. Our engine uses TF-IDF cosine similarity,
+        Jaccard shingling, and sentence-level fingerprinting to deliver precise academic integrity analysis.
+      </p>
+      <div class="hero-chips">
+        <span class="chip">PDF</span>
+        <span class="chip">DOCX</span>
+        <span class="chip">TXT</span>
+        <span class="chip-sep">•</span>
+        <span class="chip accent-chip">Free Download</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ MAIN TOOL ═══════════════════════════════ -->
+  <main class="tool-section">
+    <div class="container">
+
+      <!-- Upload Panel -->
+      <div class="upload-grid" id="uploadSection">
+
+        <!-- Source Document -->
+        <div class="upload-card primary-card">
+          <div class="card-label">
+            <span class="label-num">01</span>
+            <span class="label-text">Source Document</span>
+          </div>
+          <div class="drop-zone" id="sourceZone" data-target="sourceInput">
+            <div class="drop-icon">⬆</div>
+            <p class="drop-title">Drop your document here</p>
+            <p class="drop-sub">or click to browse</p>
+            <p class="drop-hint">PDF, DOCX, TXT · max 10 MB</p>
+            <div class="file-preview" id="sourcePreview" style="display:none"></div>
+          </div>
+          <input type="file" id="sourceInput" accept=".pdf,.docx,.txt" hidden />
+        </div>
+
+        <!-- Reference Documents -->
+        <div class="upload-card secondary-card">
+          <div class="card-label">
+            <span class="label-num">02</span>
+            <span class="label-text">Reference Documents</span>
+            <span class="label-badge">Up to 5</span>
+          </div>
+          <div class="drop-zone multi-zone" id="refZone" data-target="refInput">
+            <div class="drop-icon">⊕</div>
+            <p class="drop-title">Add reference files</p>
+            <p class="drop-sub">Compare against known sources</p>
+            <p class="drop-hint">Multiple files supported</p>
+            <div class="ref-preview-list" id="refPreviewList"></div>
+          </div>
+          <input type="file" id="refInput" accept=".pdf,.docx,.txt" multiple hidden />
+        </div>
+
+      </div>
+
+      <!-- Action Bar -->
+      <div class="action-bar" id="actionBar">
+        <button class="analyze-btn" id="analyzeBtn" disabled>
+          <span class="btn-icon">◈</span>
+          <span class="btn-text">Analyse Document</span>
+          <span class="btn-arrow">→</span>
+        </button>
+        <button class="reset-btn" id="resetBtn">Clear All</button>
+      </div>
+
+      <!-- Loading State -->
+      <div class="loading-state" id="loadingState" style="display:none">
+        <div class="loading-orb">
+          <div class="orb-ring r1"></div>
+          <div class="orb-ring r2"></div>
+          <div class="orb-ring r3"></div>
+          <span class="orb-core">◈</span>
+        </div>
+        <p class="loading-title">Analysing Document</p>
+        <div class="loading-steps">
+          <span class="step" id="step1">Parsing documents...</span>
+          <span class="step" id="step2">Building TF-IDF vectors...</span>
+          <span class="step" id="step3">Fingerprint matching...</span>
+          <span class="step" id="step4">Generating report...</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ═══════════════════════════════ RESULTS ═══════════════════════════════ -->
+  <section class="results-section" id="resultsSection" style="display:none">
+    <div class="container">
+
+      <!-- Score Hero -->
+      <div class="score-hero">
+        <div class="score-card">
+          <div class="score-ring-wrap">
+            <svg class="score-ring" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <circle class="ring-bg" cx="100" cy="100" r="80" />
+              <circle class="ring-fill" id="ringFill" cx="100" cy="100" r="80"
+                      stroke-dasharray="502.6" stroke-dashoffset="502.6"
+                      transform="rotate(-90 100 100)" />
+            </svg>
+            <div class="score-center">
+              <span class="score-number" id="scoreNumber">0%</span>
+              <span class="score-label">Plagiarism</span>
+            </div>
+          </div>
+
+          <div class="score-meta">
+            <div class="meta-row">
+              <div class="meta-item">
+                <span class="meta-val" id="originalPct">—</span>
+                <span class="meta-key">Original</span>
+              </div>
+              <div class="meta-divider"></div>
+              <div class="meta-item">
+                <span class="meta-val" id="riskLevel">—</span>
+                <span class="meta-key">Risk Level</span>
+              </div>
+              <div class="meta-divider"></div>
+              <div class="meta-item">
+                <span class="meta-val" id="flaggedCount">—</span>
+                <span class="meta-key">Flagged Passages</span>
+              </div>
+            </div>
+          </div>
+
+          <a class="download-btn" id="downloadBtn" href="#" target="_blank">
+            <span>⬇</span> Download Full PDF Report
+          </a>
+        </div>
+
+        <div class="algo-breakdown" id="algoBreakdown">
+          <h3 class="breakdown-title">Algorithm Scores</h3>
+          <div id="algoRows"></div>
+        </div>
+      </div>
+
+      <!-- Flagged Sentences -->
+      <div class="flagged-section" id="flaggedSection" style="display:none">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon">⚑</span> Flagged Passages
+          </h2>
+          <span class="section-count" id="flaggedBadge">0 matches</span>
+        </div>
+        <div class="flagged-list" id="flaggedList"></div>
+      </div>
+
+      <!-- Re-analyze -->
+      <div class="reanalyze-bar">
+        <button class="outline-btn" id="reanalyzeBtn">← Analyse Another Document</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ HOW IT WORKS ═══════════════════════════════ -->
+  <section class="how-section">
+    <div class="container">
+      <h2 class="how-title">How It Works</h2>
+      <div class="how-grid">
+        <div class="how-card">
+          <span class="how-num">01</span>
+          <h3>TF-IDF Cosine Similarity</h3>
+          <p>Converts documents into weighted term vectors and measures angle between them. Effective at detecting paraphrased content and topic overlap.</p>
+        </div>
+        <div class="how-card">
+          <span class="how-num">02</span>
+          <h3>Jaccard Shingling</h3>
+          <p>Generates overlapping 5-word n-gram fingerprints from both documents. Jaccard coefficient reveals exact and near-exact phrase copying.</p>
+        </div>
+        <div class="how-card">
+          <span class="how-num">03</span>
+          <h3>Sentence Fingerprinting</h3>
+          <p>Every source sentence is compared against all reference sentences using TF-IDF. Sentences above 65% match threshold are flagged and highlighted.</p>
+        </div>
+        <div class="how-card">
+          <span class="how-num">04</span>
+          <h3>Blended Scoring</h3>
+          <p>A weighted combination of all three algorithms produces a calibrated final score. Reports include per-reference breakdowns for transparency.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="container">
+      <span class="footer-logo">⬡ PlagiaGuard™</span>
+      <span class="footer-copy">Built for Academic Integrity · College Project 2024</span>
+    </div>
+  </footer>
+
+  <!-- Error Toast -->
+  <div class="toast" id="errorToast" style="display:none">
+    <span class="toast-icon">✕</span>
+    <span class="toast-msg" id="toastMsg"></span>
+  </div>
+
+  <script src="/static/js/main.js"></script>
+</body>
+</html>
