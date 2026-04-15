@@ -40,16 +40,13 @@ pipeline {
         // ───────────────────────────────────────────────────────
         stage('Install Dependencies') {
             steps {
-                echo '════════════════════════════════════════'
-                echo ' STAGE 1: Installing Python Dependencies'
-                echo '════════════════════════════════════════'
-
                 bat '''
+                    SET PYTHON="C:\\Users\\Trupti\\AppData\\Local\\Programs\\Python\\Python314\\python.exe"
                     IF NOT EXIST %VENV_DIR% (
-                        python -m venv %VENV_DIR%
+                        %PYTHON% -m venv %VENV_DIR%
                     )
                     CALL %VENV_DIR%\\Scripts\\activate.bat
-                    python -m pip install --upgrade pip
+                    %PYTHON% -m pip install --upgrade pip
                     pip install -r requirements.txt
                     pip install pytest pytest-cov
                     echo Dependencies installed successfully
@@ -99,7 +96,6 @@ pipeline {
         /*
         // ───────────────────────────────────────────────────────
         // STAGE 3: Selenium UI Tests
-        // Starts the Flask app, runs Selenium tests, stops app
         // ───────────────────────────────────────────────────────
         stage('Selenium UI Tests') {
             steps {
@@ -125,7 +121,6 @@ pipeline {
 
         // ───────────────────────────────────────────────────────
         // STAGE 4: Docker Build & Run
-        // Builds Docker image and starts container on port 5000
         // ───────────────────────────────────────────────────────
         stage('Docker Build & Deploy') {
             steps {
@@ -148,7 +143,7 @@ pipeline {
         }
         */
 
-    }
+    }   // ← closes stages { }
 
     // ── Post-Pipeline Actions ──────────────────────────────────
     post {
@@ -173,4 +168,4 @@ pipeline {
         }
     }
 
-}
+}   // ← closes pipeline { }
