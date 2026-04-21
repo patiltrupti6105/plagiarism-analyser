@@ -67,22 +67,15 @@ pipeline {
 
                 bat '''
                     CALL %VENV_DIR%\\Scripts\\activate.bat
-                    IF NOT EXIST reports mkdir reports
-                    pytest tests/test_unit.py ^
-                        -v ^
-                        --tb=short ^
-                        --junit-xml=reports/unit-test-results.xml ^
-                        --cov=backend ^
-                        --cov=app ^
-                        --cov-report=xml:reports/coverage.xml ^
-                        --cov-report=term-missing
+                    IF NOT EXIST testreports mkdir testreports
+                    pytest tests/test_unit.py -v --tb=short --junit-xml=testreports/unit-test-results.xml --cov=backend --cov=app --cov-report=xml:testreports/coverage.xml --cov-report=term-missing
                     echo Unit tests passed
-                '''
+                    '''
             }
 
             post {
                 always {
-                    junit allowEmptyResults: true, testResults: 'reports/unit-test-results.xml'
+                    junit allowEmptyResults: true, testResults: 'testreports/unit-test-results.xml'
                 }
                 success {
                     echo 'All unit tests passed!'
@@ -103,16 +96,16 @@ pipeline {
                 bat '''
                     CALL %VENV_DIR%\\Scripts\\activate.bat
                     pip install selenium webdriver-manager -q
-                    mkdir uploads reports 2>nul
+                    mkdir uploads testreports 2>nul
                     start /B python app.py
                     timeout /t 10
-                    pytest tests/test_selenium.py -v --tb=short --junit-xml=reports/selenium-test-results.xml -x
+                    pytest tests/test_selenium.py -v --tb=short --junit-xml=testreports/selenium-test-results.xml -x
                     taskkill /IM python.exe /F 2>nul
                 '''
             }
             post {
                 always {
-                    junit allowEmptyResults: true, testResults: 'reports/selenium-test-results.xml'
+                    junit allowEmptyResults: true, testResults: 'testreports/selenium-test-results.xml'
                 }
                 success { echo 'All Selenium UI tests passed!' }
                 failure { echo 'Selenium tests FAILED' }
@@ -168,7 +161,7 @@ pipeline {
         }
         always {
             echo 'Pipeline execution complete.'
-            archiveArtifacts artifacts: 'reports/*.xml', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'testreports/*.xml', allowEmptyArchive: true
         }
     }
     
